@@ -1,0 +1,44 @@
+____________________
+
+Room: Anonforce
+Writeup Author: Technopy
+Platform: TryHackMe
+Time invested: less than 30min.
+Date: 05/01/2022
+_____________________
+
+anonymous ftp found, you have access to the entire machine
+
+in the /notread/ directory
+i found:
+	- backup.pgp
+	- private.asc
+
+used gpg2john, to get a john compatible crack file of private.asc,
+and then cracked the password
+
+private.asc:xbox360
+
+Imported the gpg key:
+$ gpg --import private.asc
+
+and then decryted the backup.pgp
+$ gpg --decrypt backup.pgp
+
+the backup file, was the /etc/shadow file,
+so we have the hashed passwords of 
+root, and the user melodias:
+	
+	root:$6$07nYFaYf$F4VMaegmz7dKjsTukBLh6cP01iMmL7CiQDt1ycIm6a.bsOIBp0DwXVb9XI2EtULXJzBtaMZMNd2tV4uob5RVM0
+	melodias:$1$xDhc6S6G$IQHUW5ZtMkBQ5pUMjEQtL1
+
+now im using john to crack the passwords:
+
+root:hikari
+melodias:UNKONW
+
+Either way, ssh with root, is enabled, so we are root now.
+
+flags:
+	user.txt: 606083fd33beb1284fc51f411a706af8
+	root.txt: f706456440c7af4187810c31c6cebdce
